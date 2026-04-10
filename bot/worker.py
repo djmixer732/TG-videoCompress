@@ -2,7 +2,7 @@
 #    Copyright (c) 2021 Danish_00
 #    Script Improved by Anshusharma
 
-from .FastTelethon import download_file, upload_file
+from .FastTelethon import download_file  # Removed upload_file
 from .funcn import *
 from .config import *
 
@@ -27,7 +27,7 @@ async def stats(e):
 async def dl_link(event):
     if not event.is_private:
         return
-    if str(event.sender_id) not in OWNER and event.sender_id !=DEV:
+    if str(event.sender_id) not in OWNER and event.sender_id != DEV:
         return
     link, name = "", ""
     try:
@@ -82,39 +82,46 @@ async def dl_link(event):
     except BaseException:
         pass
     ees = dt.now()
-    ttt = time.time()
-    await nn.delete()
-    nnn = await xxx.client.send_message(xxx.chat_id, "** Uploading...**")
-    with open(out, "rb") as f:
-        ok = await upload_file(
-            client=xxx.client,
-            file=f,
-            name=out,
-            progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                progress(d, t, nnn, ttt, "** Uploading...**")
-            ),
-        )
-    await nnn.delete()
     org = int(Path(dl).stat().st_size)
     com = int(Path(out).stat().st_size)
     pe = 100 - ((com / org) * 100)
     per = str(f"{pe:.2f}") + "%"
+    a1 = await info(dl, xxx)
+    a2 = await info(out, xxx)
+    dk = f"""
+
+{newFile}
+
+{hbs(org)}
+{hbs(com)}
+{per}
+
+[Before]({a1}) / [After]({a2})
+
+"""
+    ttt = time.time()
+    await nn.delete()
+    nnn = await xxx.client.send_message(xxx.chat_id, "** Uploading...**")
+    ds = await xxx.client.send_file(
+        xxx.chat_id,
+        out,                    # Direct file path - this is the fix
+        force_document=True,
+        caption=dk,
+        link_preview=False,
+        thumb=thum,
+        parse_mode="html",
+        progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+            progress(d, t, nnn, ttt, "** Uploading...**")
+        ),
+    )
+    await nnn.delete()
     eees = dt.now()
     x = dtime
     xx = ts(int((ees - es).seconds) * 1000)
     xxx = ts(int((eees - ees).seconds) * 1000)
-    a1 = await info(dl, xxx)
-    a2 = await info(out, xxx)
-    dk = f"<b>File Name:</b> {newFile}\n\n<b>Original File Size:</b> {hbs(org)}\n<b>Encoded File Size:</b> {hbs(com)}\n<b>Encoded Percentage:</b> {per}\n\n<b>Get Mediainfo Here:</b> <a href='{a1}'>Before</a>/<a href='{a2}'>After</a>\n\n<i>Downloaded in {x}\nEncoded in {xx}\nUploaded in {xxx}</i>"
-    ds = await e.client.send_file(
-        e.chat_id, file=ok, force_document=True, caption=dk, link_preview=False, thumb=thum, parse_mode="html"
-    )
     os.remove(dl)
     os.remove(out)
     WORKING.clear()
-
-
-
 
 
 async def encod(event):
@@ -122,7 +129,7 @@ async def encod(event):
         if not event.is_private:
             return
         event.sender
-        if str(event.sender_id) not in OWNER and event.sender_id !=DEV:
+        if str(event.sender_id) not in OWNER and event.sender_id != DEV:
             return await event.reply("**Sorry You're not An Authorised User!**")
         if not event.media:
             return
@@ -135,7 +142,6 @@ async def encod(event):
             return
         if WORKING or QUEUE:
             xxx = await event.reply("**Adding To Queue...**")
-            # id = pack_bot_file_id(event.media)
             doc = event.media.document
             if doc.id in list(QUEUE.keys()):
                 return await xxx.edit("**This File is Already Added in Queue**")
@@ -219,33 +225,33 @@ async def encod(event):
         except BaseException:
             pass
         ees = dt.now()
-        ttt = time.time()
-        await nn.delete()
-        nnn = await e.client.send_message(e.chat_id, "** Uploading...**")
-        with open(out, "rb") as f:
-            ok = await upload_file(
-                client=e.client,
-                file=f,
-                name=out,
-                progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
-                    progress(d, t, nnn, ttt, f"** Uploading**\n__{out.replace(f'encode/', '')}__")
-                ),
-            )
-        await nnn.delete()
         org = int(Path(dl).stat().st_size)
         com = int(Path(out).stat().st_size)
         pe = 100 - ((com / org) * 100)
         per = str(f"{pe:.2f}") + "%"
+        a1 = await info(dl, e)
+        a2 = await info(out, e)
+        dk = f"<b>File Name:</b> {newFile}\n\n<b>Original File Size:</b> {hbs(org)}\n<b>Encoded File Size:</b> {hbs(com)}\n<b>Encoded Percentage:</b> {per}\n\n<b>Get Mediainfo Here:</b> <a href='{a1}'>Before</a>/<a href='{a2}'>After</a>\n\n<i>Downloaded in {x}\nEncoded in {xx}\nUploaded in {xxx}</i>"
+        ttt = time.time()
+        await nn.delete()
+        nnn = await e.client.send_message(e.chat_id, "** Uploading...**")
+        ds = await e.client.send_file(
+            e.chat_id,
+            out,                    # Direct file path - this is the fix
+            force_document=True,
+            caption=dk,
+            link_preview=False,
+            thumb=thum,
+            parse_mode="html",
+            progress_callback=lambda d, t: asyncio.get_event_loop().create_task(
+                progress(d, t, nnn, ttt, f"** Uploading**\n__{out.replace(f'encode/', '')}__")
+            ),
+        )
+        await nnn.delete()
         eees = dt.now()
         x = dtime
         xx = ts(int((ees - es).seconds) * 1000)
         xxx = ts(int((eees - ees).seconds) * 1000)
-        a1 = await info(dl, e)
-        a2 = await info(out, e)
-        dk = f"<b>File Name:</b> {newFile}\n\n<b>Original File Size:</b> {hbs(org)}\n<b>Encoded File Size:</b> {hbs(com)}\n<b>Encoded Percentage:</b> {per}\n\n<b>Get Mediainfo Here:</b> <a href='{a1}'>Before</a>/<a href='{a2}'>After</a>\n\n<i>Downloaded in {x}\nEncoded in {xx}\nUploaded in {xxx}</i>"
-        ds = await e.client.send_file(
-            e.chat_id, file=ok, force_document=True, caption=dk, link_preview=False, thumb=thum, parse_mode="html"
-        )
         os.remove(dl)
         os.remove(out)
         WORKING.clear()
