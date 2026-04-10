@@ -104,7 +104,7 @@ async def dl_link(event):
     nnn = await xxx.client.send_message(xxx.chat_id, "** Uploading...**")
     ds = await xxx.client.send_file(
         xxx.chat_id,
-        out,                    # Direct file path - this is the fix
+        out,
         force_document=True,
         caption=dk,
         link_preview=False,
@@ -115,10 +115,6 @@ async def dl_link(event):
         ),
     )
     await nnn.delete()
-    eees = dt.now()
-    x = dtime
-    xx = ts(int((ees - es).seconds) * 1000)
-    xxx = ts(int((eees - ees).seconds) * 1000)
     os.remove(dl)
     os.remove(out)
     WORKING.clear()
@@ -224,6 +220,8 @@ async def encod(event):
                 return os.remove(out)
         except BaseException:
             pass
+
+        # ──────── FIXED UPLOAD SECTION ────────
         ees = dt.now()
         org = int(Path(dl).stat().st_size)
         com = int(Path(out).stat().st_size)
@@ -231,13 +229,19 @@ async def encod(event):
         per = str(f"{pe:.2f}") + "%"
         a1 = await info(dl, e)
         a2 = await info(out, e)
-        dk = f"<b>File Name:</b> {newFile}\n\n<b>Original File Size:</b> {hbs(org)}\n<b>Encoded File Size:</b> {hbs(com)}\n<b>Encoded Percentage:</b> {per}\n\n<b>Get Mediainfo Here:</b> <a href='{a1}'>Before</a>/<a href='{a2}'>After</a>\n\n<i>Downloaded in {x}\nEncoded in {xx}\nUploaded in {xxx}</i>"
+
+        download_time = dtime
+        encode_time = ts(int((ees - es).seconds) * 1000)
+
+        dk = f"<b>File Name:</b> {newFile}\n\n<b>Original File Size:</b> {hbs(org)}\n<b>Encoded File Size:</b> {hbs(com)}\n<b>Encoded Percentage:</b> {per}\n\n<b>Get Mediainfo Here:</b> <a href='{a1}'>Before</a>/<a href='{a2}'>After</a>\n\n<i>Downloaded in {download_time}\nEncoded in {encode_time}</i>"
+
         ttt = time.time()
         await nn.delete()
         nnn = await e.client.send_message(e.chat_id, "** Uploading...**")
+
         ds = await e.client.send_file(
             e.chat_id,
-            out,                    # Direct file path - this is the fix
+            out,
             force_document=True,
             caption=dk,
             link_preview=False,
@@ -248,10 +252,14 @@ async def encod(event):
             ),
         )
         await nnn.delete()
+
         eees = dt.now()
-        x = dtime
-        xx = ts(int((ees - es).seconds) * 1000)
-        xxx = ts(int((eees - ees).seconds) * 1000)
+        upload_time = ts(int((eees - ees).seconds) * 1000)
+
+        # Add upload time to the final message
+        final_caption = dk + f"\nUploaded in {upload_time}"
+        await ds.edit(final_caption)
+
         os.remove(dl)
         os.remove(out)
         WORKING.clear()
